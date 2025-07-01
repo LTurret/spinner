@@ -7,11 +7,15 @@ from typing import Any, Generator, Optional
 spinner_frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 
 
-def box(text: Optional[str], width: int = 16):
-    stdout.write("\033[F" * 3 if hasattr(box, "ran_once") else "")
-    box.ran_once = True
-    stdout.write("\033[K")
-    stdout.write(f"╭{"─" * width}╮\n")
+def box(title: Optional[str] = None, text: Optional[str] = None, width: int = 16, stream: bool = False) -> None:
+    if stream:
+        stdout.write("\033[F" * 3 if hasattr(box, "ran_once") else "")
+        box.ran_once = True
+        stdout.write("\033[K")
+    if title is not None:
+        stdout.write(f"╭─┐\033[90m{title}\033[00m┌{"─" * (width - len(title) - 3)}╮\n")
+    else:
+        stdout.write(f"╭{"─" * width}╮\n")
     stdout.write(f"│{" " * width}│\r")
     stdout.write(f"│ {text}\n")
     stdout.write(f"╰{"─" * width}╯\n")
@@ -31,5 +35,8 @@ def spinner(text: Optional[str] = None, duration: int = 3) -> Generator[Any]:
     yield f"\033[92m✔ Done!\033[00m"
 
 
-for frame in spinner("Loading", duration = 3):
-    box(frame, width=16)
+if __name__ == "__main__":
+    for frame in spinner("Baking ur cake properly", duration=3):
+        box(title="meow :3", text=frame, width=30, stream=True)
+    box(title="result", text="Ur cake is good now meow", width=30)
+
