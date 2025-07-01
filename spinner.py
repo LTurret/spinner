@@ -7,7 +7,7 @@ from typing import Any, Generator, Optional
 spinner_frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 
 
-def box(title: Optional[str] = None, text: Optional[str] = None, width: int = 16, stream: bool = False) -> None:
+def box(title: Optional[str] = None, text: Optional[str] = None, width: int = 16, stream: bool = False, stdin: bool = False) -> Optional[None]:
     if stream:
         stdout.write("\033[F" * 3 if hasattr(box, "ran_once") else "")
         box.ran_once = True
@@ -17,9 +17,19 @@ def box(title: Optional[str] = None, text: Optional[str] = None, width: int = 16
     else:
         stdout.write(f"╭{"─" * width}╮\n")
     stdout.write(f"│{" " * width}│\r")
-    stdout.write(f"│ {text}\n")
-    stdout.write(f"╰{"─" * width}╯\n")
+    if stdin:
+        stdout.write(f"│ {text}> \n")
+        stdout.write(f"╰{"─" * width}╯\n")
+        stdout.write("\033[F" * 2)
+        stdout.write(f"\033[{len(text) + 4}C")
+        prompt = input()
+        stdout.write("\n")
+        return prompt
+    else:
+        stdout.write(f"│ {text}\n")
+        stdout.write(f"╰{"─" * width}╯\n")
     stdout.flush()
+    return None
 
 
 def spinner(text: Optional[str] = None, duration: int = 3) -> Generator[Any]:
@@ -36,7 +46,7 @@ def spinner(text: Optional[str] = None, duration: int = 3) -> Generator[Any]:
 
 
 if __name__ == "__main__":
+    output = box(title="input box", text="enter", stdin=True, width=30)
     for frame in spinner("Baking ur cake properly", duration=3):
-        box(title="meow :3", text=frame, width=30, stream=True)
-    box(title="result", text="Ur cake is good now meow", width=30)
-
+        box(title="progress", text=frame, width=30, stream=True)
+    box(title="ur prompt", text=output, width=30)
