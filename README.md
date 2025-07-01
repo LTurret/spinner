@@ -4,10 +4,13 @@ Spinner is a little program that trying to handover the loading animation from n
 
 ```sh
 $ python3 spinner.py
-╭─┐meow :3┌────────────────────╮
+╭─┐input box┌──────────────────╮
+│ enter> hello world           │
+╰──────────────────────────────╯
+╭─┐progress┌───────────────────╮
 │ ✔ Done!                      │
 ╰──────────────────────────────╯
-╭─┐result┌─────────────────────╮
-│ Ur cake is good now meow     │
+╭─┐ur prompt┌──────────────────╮
+│ hello world                  │
 ╰──────────────────────────────╯
 ```
